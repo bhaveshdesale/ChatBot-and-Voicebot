@@ -398,19 +398,27 @@
 # Without lllm
 import streamlit as st
 import os
-import pyttsx3
 import torch
 import torchaudio
-import requests
+import pyttsx3  # Updated import for pyttsx3
 from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, WebRtcMode
 import av
 import numpy as np
+import tempfile
 
-# Text to Speech
+# Text to Speech with pyttsx3
 def speak(text):
-    engine = pyttsx3.init()
-    engine.say(text)
+    engine = pyttsx3.init()  # Initialize the pyttsx3 engine
+    engine.setProperty('rate', 150)  # Adjust the speed of speech (optional)
+    engine.setProperty('volume', 1)  # Adjust the volume (optional)
+    
+    # Save speech to a temporary file and play it
+    engine.save_to_file(text, 'speech.mp3')
     engine.runAndWait()
+    
+    # Play the audio file in Streamlit
+    st.audio('speech.mp3', format='audio/mp3')
+    os.remove('speech.mp3')  # Remove the temporary file after playing
 
 # ✅ Simple logic-based chatbot response (No API needed)
 def logic_bot_response(prompt):
@@ -458,7 +466,7 @@ class AudioProcessor(AudioProcessorBase):
 # Streamlit UI Config
 st.set_page_config(page_title="💬 ChatBot + Voice Bot", page_icon="🤖", layout="centered")
 
-st.markdown("""
+st.markdown(""" 
     <style>
     .chat-bubble {
         padding: 12px 16px;
@@ -484,13 +492,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
-st.markdown("<h1 style='text-align: center; color: #4CAF50;'>🤖 ChatBot + VoiceBot </h1>", unsafe_allow_html=True)
-st.write("<p style='text-align:center;'>Chat with AI using <b>Text</b> or <b>Voice</b></p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #4CAF50;'>🤖 ChatBot + VoiceBot</h1>", unsafe_allow_html=True)
+st.write("<p style='text-align:center;'>Chat with AI <b>Text</b> or <b>Voice</b></p>", unsafe_allow_html=True)
 
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
-
 
 st.markdown("## 🚀 Text Chat")
 
@@ -501,11 +507,10 @@ if st.button("Send Message"):
         bot_reply = logic_bot_response(user_input)
         st.session_state.chat_history.append(("You", user_input))
         st.session_state.chat_history.append(("Bot", bot_reply))
-        speak(bot_reply)
+        speak(bot_reply)  # Use the modified speak function
         st.success("✅ Bot replied and spoken!")
 
 st.markdown("---")
-
 
 st.markdown("## 🎙️ Voice Chat")
 
@@ -539,7 +544,7 @@ if ctx and ctx.state.playing:
         bot_reply = logic_bot_response(text)
         st.session_state.chat_history.append(("You", text))
         st.session_state.chat_history.append(("Bot", bot_reply))
-        speak(bot_reply)
+        speak(bot_reply)  # Use the modified speak function
         st.success("✅ Bot replied and spoken!")
 
 st.markdown("---")
