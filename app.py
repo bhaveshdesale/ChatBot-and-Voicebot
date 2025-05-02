@@ -399,6 +399,7 @@
 import streamlit as st
 import os
 import torch
+import torchaudio
 import pyttsx3  # Updated import for pyttsx3
 from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, WebRtcMode
 import av
