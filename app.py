@@ -559,4 +559,4 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"<div class='chat-bubble bot'>🤖 <b>{sender}:</b> {message}</div>", unsafe_allow_html=True)
 
 st.markdown("---")
-st.markdown("<p style='text-align:center; font-size: small;'>Made with ❤️ using Streamlit</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; font-size: small;'>Made By Jayesh With ❤️ using Streamlit</p>", unsafe_allow_html=True)
